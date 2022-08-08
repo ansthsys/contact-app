@@ -1,44 +1,62 @@
 import React from 'react';
 import { ContactList } from './ContactList';
+import { ContactInput } from './ContactInput'
 
 import '../styles/App.css'
 import { GetData } from '../utils/GetData';
 
-// export const ContactApp = () => {
-//  // const contacts = GetData();
-//  // console.log(GetData)
-//
-//  return (
-//    <div className="contact-app">
-//      <h1>Daftar Kontak</h1>
-//      <ContactList contacts={GetData()} />
-//    </div>
-//  );
-// }
-
 export class ContactApp extends React.Component {
- constructor(props) {
-   super(props);
-   this.state = {
-     contacts: GetData(),
-   }
+  constructor(props) {
+    super(props);
+    this.state = {
+      contacts: GetData(),
+    }
 
-   this.onDeleteHandler = this.onDeleteHandler.bind(this);
- }
+    this.onDeleteHandler = this.onDeleteHandler.bind(this);
+    this.onAddContactHandler = this.onAddContactHandler.bind(this);
+  }
 
- onDeleteHandler(id) {
-   const contacts = this.state.contacts.filter(contact => contact.id !== id);
-   this.setState({ contacts });
- }
+  onDeleteHandler(id) {
+    const contacts = this.state.contacts.filter(contact => contact.id !== id);
+    this.setState({ contacts });
+  }
 
- render() {
-   return (
-     <div className="contact-app">
-       <h1>Daftar Kontak</h1>
-       <ContactList
-       contacts={this.state.contacts}
-       onDelete={this.onDeleteHandler} />
-     </div>
-   );
- }
+  onAddContactHandler({ name, tag }) {
+    this.setState((prevState) => {
+      return {
+        contacts: [
+          ...prevState.contacts,
+          {
+            id: +new Date(),
+            name,
+            tag,
+            imageUrl: '../src/assets/images/default.jpg',
+          }
+        ]
+      }
+    })
+  }
+
+  // render() {
+  //   return (
+  //     <div className="contact-app">
+  //       <h1>Daftar Kontak</h1>
+  //       <ContactList
+  //       contacts={this.state.contacts}
+  //       onDelete={this.onDeleteHandler} />
+  //     </div>
+  //   )
+  // }
+
+  render() {
+    return (
+      <div className="contact-app" >
+        <h1>Aplikasi Kontak</h1>
+        <h2>Tambah Kontak</h2>
+        <ContactInput addContact={this.onAddContactHandler} />
+        <h2>Daftar Kontak</h2>
+        <ContactList contacts={this.state.contacts} onDelete={this.onDeleteHandler} />
+      </div>
+    )
+  }
 }
